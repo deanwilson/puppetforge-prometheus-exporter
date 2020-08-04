@@ -3,7 +3,7 @@ require 'prometheus/client'
 require 'prometheus/client/push'
 require 'puppet_forge'
 
-PuppetForge.user_agent = "PuppetForge-Prometheus-Exporter/0.0.1"
+PuppetForge.user_agent = 'PuppetForge-Prometheus-Exporter/0.0.1'
 registry = Prometheus::Client.registry
 
 total_modules = Prometheus::Client::Gauge.new(:puppetforge_user_modules, docstring: '...TODO...', labels: [:name])
