@@ -3,3 +3,6 @@ AllCops:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
