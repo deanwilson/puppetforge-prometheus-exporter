@@ -22,6 +22,13 @@ total_download_count = Prometheus::Client::Counter.new(
 )
 registry.register(total_download_count)
 
+quality = Prometheus::Client::Gauge.new(
+  :puppetforge_module_quality_score,
+  docstring: '...TODO...',
+  labels: %i[name module]
+)
+registry.register(quality)
+
 user_names = ARGV.sort.uniq
 
 user_names.each do |user_name|
@@ -38,6 +45,9 @@ user_names.each do |user_name|
 
     total_downloads = releases.map { |r| r.downloads }.sum
     total_download_count.increment(by: total_downloads, labels: { name: user_name, module: forge_module.name })
+
+    quality_score = forge_module.current_release.validation_score
+    quality.set(quality_score, labels: { name: user_name, module: forge_module.name })
   end
 end
 
