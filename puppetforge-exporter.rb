@@ -9,6 +9,12 @@ registry = Prometheus::Client.registry
 total_modules = Prometheus::Client::Gauge.new(:puppetforge_user_modules, docstring: '...TODO...', labels: [:name])
 registry.register(total_modules)
 
+latest_downloads = Prometheus::Client::Gauge.new(
+  :puppetforge_module_latest_downloads_total,
+  docstring: '...TODO...', labels: %i[name module]
+)
+registry.register(latest_downloads)
+
 user_names = ARGV.sort.uniq
 
 user_names.each do |user_name|
@@ -16,6 +22,13 @@ user_names.each do |user_name|
 
   # puppetforge_user_modules{name="deanwilson"} $N  # gauge as modules can be removed.
   total_modules.set(user.module_count, labels: { name: user_name })
+
+  user.modules.each do |forge_module|
+    releases = forge_module.releases
+
+    downloads = releases[0].downloads
+    latest_downloads.set(downloads, labels: { name: user_name, module: forge_module.name })
+  end
 end
 
 Prometheus::Client::Push.new('puppetforge-exporter', '', 'http://127.0.0.1:9091').add(registry)
