@@ -57,6 +57,13 @@ latest_downloads = Prometheus::Client::Gauge.new(
 )
 registry.register(latest_downloads)
 
+total_release_count = Prometheus::Client::Gauge.new(
+  :puppetforge_user_release_total,
+  docstring: '...TODO...', labels: %i[name]
+)
+registry.register(total_release_count)
+
+
 total_download_count = Prometheus::Client::Counter.new(
   :puppetforge_module_downloads_total,
   docstring: '...TODO...',
@@ -76,6 +83,7 @@ options.user_names.each do |user_name|
 
   # puppetforge_user_modules{name="deanwilson"} $N  # gauge as modules can be removed.
   total_modules.set(user.module_count, labels: { name: user_name })
+  total_release_count.set(user.release_count, labels: { name: user_name })
 
   user.modules.each do |forge_module|
     releases = forge_module.releases
