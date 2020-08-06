@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.1] - 2020-04-08
+## [0.0.2] - 2020-08-06
+### Added
+- Added validation score metric - PR#7
+- Added command line and environment variable config for push gateway host and port PR#8
+
+## [0.0.1] - 2020-08-04
 ### Added
 - Initial release - just enough code to push a module count to a pushgateway PR#1
 - Add dependabot to ensure dependencies are updated PR#2
