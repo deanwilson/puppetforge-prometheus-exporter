@@ -1,7 +1,39 @@
 #!/usr/bin/env ruby
+require 'ostruct'
+require 'optparse'
 require 'prometheus/client'
 require 'prometheus/client/push'
 require 'puppet_forge'
+
+APP_NAME = File.basename $PROGRAM_NAME
+
+options = OpenStruct.new({})
+
+options.gateway_port = ENV['PUPPETFORGE_EXPORTER_PORT'] || 9091
+options.gateway_host = ENV['PUPPETFORGE_EXPORTER_HOST'] || 'http://127.0.0.1'
+
+OptionParser.new do |opts|
+  opts.banner = <<-ENDOFUSAGE
+    #{APP_NAME} queries the given users puppetforge account and sends metrics to a prometheus pushgateway
+      $ #{APP_NAME} deanwilson
+      ...
+      TODO
+      ...
+  ENDOFUSAGE
+
+  opts.on('--host HOST',
+          'The pushgateway host. Defaults to http://127.0.0.1',
+          '') { |host| options.gateway_host = host }
+
+  opts.on('--port PORT',
+          'The pushgateway port. Defaults to 9091',
+          '') { |port| options.gateway_port = port.to_i }
+
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+end.parse!
 
 PuppetForge.user_agent = 'PuppetForge-Prometheus-Exporter/0.0.1'
 registry = Prometheus::Client.registry
@@ -51,4 +83,6 @@ user_names.each do |user_name|
   end
 end
 
-Prometheus::Client::Push.new('puppetforge-exporter', '', 'http://127.0.0.1:9091').add(registry)
+gateway_address = "#{options.gateway_host}:#{options.gateway_port}"
+
+Prometheus::Client::Push.new('puppetforge-exporter', '', gateway_address).add(registry)
