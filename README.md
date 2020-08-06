@@ -21,6 +21,7 @@ new module or release.
 
 ## Configuration
 
+### Pushgateway
 You can configure the remote pushgateway to send the metrics to via
 commandline switches or environment variables. If both are specified the
 switches take precedence.
@@ -34,6 +35,27 @@ Environment variables:
 Or using the switches:
 
     puppetforge-exporter.rb deanwilson --host http://10.10.100.100 --port 99999
+
+### Users
+
+You can specify which Puppet Forge users to query in three different ways
+
+    PUPPETFORGE_EXPORTER_USERS=deanwilson
+    puppetforge-exporter.rb
+
+Is overridden by
+
+    puppetforge-exporter.rb deanwilson
+
+which are both overridden by
+
+    puppetforge-exporter.rb --users deanwilson
+
+In the first and last case you can specify multiple users as comma seperated strings.
+
+    export PUPPETFORGE_EXPORTER_USERS=deanwilson,notdeanwilson
+    puppetforge-exporter.rb --users deanwilson,notdeanwilson
+    puppetforge-exporter.rb deanwilson notdeanwilson # no comma
 
 ## Author
 

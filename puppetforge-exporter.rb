@@ -12,6 +12,12 @@ options = OpenStruct.new({})
 options.gateway_port = ENV['PUPPETFORGE_EXPORTER_PORT'] || 9091
 options.gateway_host = ENV['PUPPETFORGE_EXPORTER_HOST'] || 'http://127.0.0.1'
 
+# username precedence - take the values from the env var, override them
+# with any raw command line args and then possibly with the cli switch
+# in OptionParser
+options.user_names = ENV['PUPPETFORGE_EXPORTER_USERS='] || []
+options.user_names = ARGV.sort.uniq
+
 OptionParser.new do |opts|
   opts.banner = <<-ENDOFUSAGE
     #{APP_NAME} queries the given users puppetforge account and sends metrics to a prometheus pushgateway
@@ -28,6 +34,10 @@ OptionParser.new do |opts|
   opts.on('--port PORT',
           'The pushgateway port. Defaults to 9091',
           '') { |port| options.gateway_port = port.to_i }
+
+  opts.on('--users USERS',
+          'The PuppetForge users. comma separated - deanwilson,notdeanwilson',
+          '') { |users| options.user_names = users.split(',') }
 
   opts.on_tail('-h', '--help', 'Show this message') do
     puts opts
@@ -61,9 +71,7 @@ quality = Prometheus::Client::Gauge.new(
 )
 registry.register(quality)
 
-user_names = ARGV.sort.uniq
-
-user_names.each do |user_name|
+options.user_names.each do |user_name|
   user = PuppetForge::User.find(user_name)
 
   # puppetforge_user_modules{name="deanwilson"} $N  # gauge as modules can be removed.
