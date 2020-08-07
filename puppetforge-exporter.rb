@@ -51,6 +51,16 @@ registry = Prometheus::Client.registry
 total_modules = Prometheus::Client::Gauge.new(:puppetforge_user_modules, docstring: '...TODO...', labels: [:name])
 registry.register(total_modules)
 
+## Metadata about the exporter itself
+exporter_info = Prometheus::Client::Gauge.new(
+  :puppetforge_exporter,
+  docstring: 'A metric with a constant "1" value labeled by version',
+  labels: %i[version]
+)
+registry.register(exporter_info)
+exporter_info.set(1, labels: { version: "0.0.3" })
+
+
 latest_downloads = Prometheus::Client::Gauge.new(
   :puppetforge_module_latest_downloads_total,
   docstring: '...TODO...', labels: %i[name module]
