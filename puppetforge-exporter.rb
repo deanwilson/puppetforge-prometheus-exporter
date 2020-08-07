@@ -9,6 +9,7 @@ APP_NAME = File.basename $PROGRAM_NAME
 
 options = OpenStruct.new({})
 
+options.instance = ENV['PUPPETFORGE_EXPORTER_INSTANCE'] || ''
 options.gateway_port = ENV['PUPPETFORGE_EXPORTER_PORT'] || 9091
 options.gateway_host = ENV['PUPPETFORGE_EXPORTER_HOST'] || 'http://127.0.0.1'
 
@@ -30,6 +31,10 @@ OptionParser.new do |opts|
   opts.on('--host HOST',
           'The pushgateway host. Defaults to http://127.0.0.1',
           '') { |host| options.gateway_host = host }
+
+  opts.on('--instance INSTANCE',
+          'The pushgateway instance label. Defaults to \'\'',
+          '') { |instance| options.instance = instance }
 
   opts.on('--port PORT',
           'The pushgateway port. Defaults to 9091',
@@ -114,4 +119,4 @@ end
 
 gateway_address = "#{options.gateway_host}:#{options.gateway_port}"
 
-Prometheus::Client::Push.new('puppetforge-exporter', '', gateway_address).add(registry)
+Prometheus::Client::Push.new('puppetforge-exporter', options.instance, gateway_address).add(registry)
