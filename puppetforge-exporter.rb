@@ -48,7 +48,11 @@ end.parse!
 PuppetForge.user_agent = 'PuppetForge-Prometheus-Exporter/0.0.1'
 registry = Prometheus::Client.registry
 
-total_modules = Prometheus::Client::Gauge.new(:puppetforge_user_modules, docstring: '...TODO...', labels: [:name])
+total_modules = Prometheus::Client::Gauge.new(
+  :puppetforge_user_modules,
+  docstring: 'The number of PuppetForge modules owned by this user.',
+  labels: [:name]
+)
 registry.register(total_modules)
 
 ## Metadata about the exporter itself
@@ -58,32 +62,31 @@ exporter_info = Prometheus::Client::Gauge.new(
   labels: %i[version]
 )
 registry.register(exporter_info)
-exporter_info.set(1, labels: { version: "0.0.3" })
-
+exporter_info.set(1, labels: { version: '0.0.3' })
 
 latest_downloads = Prometheus::Client::Gauge.new(
   :puppetforge_module_latest_downloads_total,
-  docstring: '...TODO...', labels: %i[name module]
+  docstring: 'The total downloads for this version of the module.',
+  labels: %i[name module]
 )
 registry.register(latest_downloads)
 
 total_release_count = Prometheus::Client::Gauge.new(
   :puppetforge_user_release_total,
-  docstring: '...TODO...', labels: %i[name]
+  docstring: 'The total number of releases made by this user over all their modules.', labels: %i[name]
 )
 registry.register(total_release_count)
 
-
 total_download_count = Prometheus::Client::Counter.new(
   :puppetforge_module_downloads_total,
-  docstring: '...TODO...',
+  docstring: 'The combined total downloads for all versions of this module.',
   labels: %i[name module]
 )
 registry.register(total_download_count)
 
 quality = Prometheus::Client::Gauge.new(
   :puppetforge_module_quality_score,
-  docstring: '...TODO...',
+  docstring: 'The PuppetForge quality score for this module.',
   labels: %i[name module]
 )
 registry.register(quality)
