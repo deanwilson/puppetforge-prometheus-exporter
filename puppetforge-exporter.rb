@@ -16,7 +16,7 @@ options.gateway_host = ENV['PUPPETFORGE_EXPORTER_HOST'] || 'http://127.0.0.1'
 # username precedence - take the values from the env var, override them
 # with any raw command line args and then possibly with the cli switch
 # in OptionParser
-options.user_names = ENV['PUPPETFORGE_EXPORTER_USERS'].split(',') || []
+options.user_names = ENV['PUPPETFORGE_EXPORTER_USERS'] ? ENV['PUPPETFORGE_EXPORTER_USERS'].split(',') : []
 options.user_names = ARGV.sort.uniq unless ARGV.empty?
 
 OptionParser.new do |opts|
