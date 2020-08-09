@@ -15,14 +15,35 @@ new module or release.
 
 ## Usage
 
+### Command line
+
     puppetforge-exporter.rb deanwilson
 
 ![Metrics Gateway with Puppetforge Prometheus Pushgateway Exporter metrics](/images/puppetforge-exporter-metrics-webui.png "Metrics Gateway with Puppetforge Prometheus Pushgateway Exporter metrics")
 
+### Docker image
+
+To run `puppetforge-exporter.rb` with docker, using all the default values including
+only checking my PuppetForge user name:
+
+    docker run --net host --rm deanwilson/puppetforge-prometheus-exporter:latest
+
+The minumum configuration you will probably need is to change
+`PUPPETFORGE_EXPORTER_USERS` to point at your own use. This can be done
+by rebuilding the docker images, specifying the `--users` flag or passing
+a custom `PUPPETFORGE_EXPORTER_USERS` environment variable.
+
+    docker run --net host --env PUPPETFORGE_EXPORTER_USERS=cnafsd --rm deanwilson/puppetforge-prometheus-exporter:latest
+
+    docker run --net host --rm deanwilson/puppetforge-prometheus-exporter:latest --users cnafsd
+
+The Configuration section contains more information on which settings you can change.
+
 ## Configuration
 
 ### Pushgateway
-You can configure the remote pushgateway to send the metrics to via
+
+You can configure which remote pushgateway to send metrics to via
 commandline switches or environment variables. If both are specified the
 switches take precedence.
 
