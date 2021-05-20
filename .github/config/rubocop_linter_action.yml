@@ -1,4 +1,0 @@
-versions:
-  - rubocop
-
-rubocop_fail_level: 'fatal'
