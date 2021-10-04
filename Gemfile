@@ -5,5 +5,5 @@ gem 'puppet_forge', '~> 3.1.0'
 
 group :development do
   gem 'rake', '~> 13.0.0'
-  gem 'rubocop', '~> 1.21.0'
+  gem 'rubocop', '~> 1.22.1'
 end
