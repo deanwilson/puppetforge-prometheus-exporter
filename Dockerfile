@@ -1,4 +1,4 @@
-FROM ruby:3.0.3-slim-buster
+FROM ruby:3.1.0-slim-buster
 
 ENV PUPPETFORGE_EXPORTER_USERS deanwilson
 
